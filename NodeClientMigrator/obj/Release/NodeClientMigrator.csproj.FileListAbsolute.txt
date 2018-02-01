@@ -1,0 +1,6 @@
+E:\Pymes Migrator\NodeClientMigrator\NodeClientMigrator\bin\Release\NodeClientMigrator.exe.config
+E:\Pymes Migrator\NodeClientMigrator\NodeClientMigrator\bin\Release\NodeClientMigrator.exe
+E:\Pymes Migrator\NodeClientMigrator\NodeClientMigrator\bin\Release\NodeClientMigrator.pdb
+E:\Pymes Migrator\NodeClientMigrator\NodeClientMigrator\obj\Release\NodeClientMigrator.csproj.CoreCompileInputs.cache
+E:\Pymes Migrator\NodeClientMigrator\NodeClientMigrator\obj\Release\NodeClientMigrator.exe
+E:\Pymes Migrator\NodeClientMigrator\NodeClientMigrator\obj\Release\NodeClientMigrator.pdb
