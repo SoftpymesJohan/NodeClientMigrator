@@ -5,3 +5,10 @@ E:\Pymes Migrator\NodeClientMigrator\NodeClientMigrator\obj\Debug\NodeClientMigr
 E:\Pymes Migrator\NodeClientMigrator\NodeClientMigrator\obj\Debug\NodeClientMigrator.csproj.CoreCompileInputs.cache
 E:\Pymes Migrator\NodeClientMigrator\NodeClientMigrator\obj\Debug\NodeClientMigrator.exe
 E:\Pymes Migrator\NodeClientMigrator\NodeClientMigrator\obj\Debug\NodeClientMigrator.pdb
+D:\lic\NodeClientMigrator\NodeClientMigrator\bin\Debug\NodeClientMigrator.exe.config
+D:\lic\NodeClientMigrator\NodeClientMigrator\obj\Debug\NodeClientMigrator.exe
+D:\lic\NodeClientMigrator\NodeClientMigrator\obj\Debug\NodeClientMigrator.pdb
+D:\lic\NodeClientMigrator\NodeClientMigrator\obj\Debug\NodeClientMigrator.csprojResolveAssemblyReference.cache
+D:\lic\NodeClientMigrator\NodeClientMigrator\bin\Debug\NodeClientMigrator.exe
+D:\lic\NodeClientMigrator\NodeClientMigrator\bin\Debug\NodeClientMigrator.pdb
+D:\lic\NodeClientMigrator\NodeClientMigrator\bin\Debug\DotNetZip.dll
