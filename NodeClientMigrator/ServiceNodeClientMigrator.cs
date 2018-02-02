@@ -17,6 +17,7 @@ using System.Windows;
 using System.Xml.Linq;
 using Ionic.Zip;
 using Microsoft.Win32;
+using System.IO.Compression;
 
 namespace NodeClientMigrator
 {
@@ -24,10 +25,9 @@ namespace NodeClientMigrator
     {
         Timer timer;
         static string dir = null;
-        static string[] dirsRestore = null;
-        static string[] dirsRestoring = null;
-        static string[] dirsRestored = null;
-        string install = null;
+        static string install = null;
+        static string pathinitial = null;
+        static string pathDataBases = null;
 
 
         public ServiceNodeClientMigrator()
@@ -51,13 +51,16 @@ namespace NodeClientMigrator
         }
         private void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            pathinitial = @"D:\lic\DataBases";
+            pathDataBases = @"D:\lic\DataBasesMigration";
             ServiceCrear();
             
         }
 
         public static void ServiceCrear()
         {
-            CreateStructure(@"D:\lic");
+            CreateStructure(pathinitial);
+            ProcessStructure(pathinitial);
         }
         public void OnDebug()
         {
@@ -68,33 +71,12 @@ namespace NodeClientMigrator
         {
             try
             {
-                string path = pathinit + "/DataBases";
                 // Determinar si existe la carpeta Inicial.
-                if (!Directory.Exists(path))
+                if (!Directory.Exists(pathinit))
                 {
-                    CreateDir(path);
+                    CreateDir(pathinit);
                     foreach(string d in dir.Split('~'))
-                        CreateDir(path + "/" + d);
-                }
-                else
-                {
-                    //foreach (string d in dir.Split('~'))
-                    //{
-                    string backupzip = (path + "/" + dir.Split('~')[0]);
-                    string backupbk = (path + "/" + dir.Split('~')[1]);
-                    var dirs = Directory.GetFiles(backupzip, "*.zip");
-                    foreach(var d in dirs)
-                    {
-                        Decompress(d, backupbk);
-                    }
-                        /*if (d == dir.Split('~')[0])
-                            dirsRestore = dirs;
-                        else if (d == dir.Split('~')[1])
-                            dirsRestoring = dirs;
-                        else
-                            dirsRestoring = dirs;*/
-                    //}
-                    //System.IO.File.Copy(sourceFile, destFile, true);
+                        CreateDir(pathinit + "\\" + d);
                 }
 
             }
@@ -105,9 +87,24 @@ namespace NodeClientMigrator
             finally { }
         }
 
-        private static void processs()
+        private static void ProcessStructure(string path)
         {
-            //dirsRestore
+            try
+            {
+                string backupzip = (path + "\\" + dir.Split('~')[0]);
+                string backupbk = (path + "\\" + dir.Split('~')[1]);
+                var dirs = Directory.GetFiles(backupzip, "*.zip");
+                foreach (var d in dirs)
+                {
+                    Decompress(d, backupbk);
+                    File.Delete(d);
+                    //RestoreDatabase(d,pathDataBases)
+                }
+            }
+            catch (Exception)
+            {
+                
+            }
         }
 
         private static void CreateDir(string path)
@@ -142,26 +139,33 @@ namespace NodeClientMigrator
 
         }
 
-        private void Log(string logp)
+        private static void Log(string logp)
         {
             File.AppendAllText(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\\BackUp.log", DateTime.Now.ToString() + " - " + logp + Environment.NewLine);
         }
 
         private static void Decompress(string filename,string path)
         {
-            using (ZipFile file = new ZipFile(filename))
+            //string dire = filename.Split('\\')[filename.Split('\\').Length - 1];
+            string dire = System.IO.Path.GetFileName(filename).Replace(".zip", "");
+            //string pathdb = path + "\\" + dire.Substring(0, dire.Length - 4);
+            string pathdb = path + "\\" + dire;
+            if (!Directory.Exists(pathdb))
             {
-                //file.ExtractProgress += file_ExtractProgress;
-                //Se extrae los archivos del .zip
-                file.ExtractAll(path);
-                //Se guarda el documento en la carpeta creada anteriormente
-                file.Save();
+                CreateDir(pathdb);
+                using (ZipFile file = new ZipFile(filename))
+                {
+                    //Se extrae los archivos del .zip
+                    file.ExtractAll(pathdb);
+                    //Se guarda el documento en la carpeta creada anteriormente
+                    file.Save();
+                }
             }
         }
 
         
 
-        private void RestoreDatabase(string filename,string path)
+        private static void RestoreDatabase(string filename,string path)
         {
             if (!string.IsNullOrEmpty(filename))
             {
@@ -210,7 +214,7 @@ namespace NodeClientMigrator
                     cm.Connection.Close();
                     Log("Base de datos " + DataFile + " Y Log " + LogFile);
 
-                    string InstallPathDatabase = install + filename.Substring(0,filename.Length-4) /*+ instanceSelection.Split('\\')[1] + "\\"*/;
+                    string InstallPathDatabase = install + FileName /*+ instanceSelection.Split('\\')[1] + "\\"*/;
 
                     if (!Directory.Exists(InstallPathDatabase))
                         Directory.CreateDirectory(InstallPathDatabase);
@@ -286,13 +290,13 @@ namespace NodeClientMigrator
         }
 
 
-        private string DeleteDataBase(string HibernateDatabaseName)
+        private static string DeleteDataBase(string HibernateDatabaseName)
         {
             string tx = "USE MASTER; DROP DATABASE [" + HibernateDatabaseName + "]; ";
             return tx;
         }
 
-        private string SizeDataBase(string HibernateDatabaseName, string LogFile)
+        private static string SizeDataBase(string HibernateDatabaseName, string LogFile)
         {
             string tx = "USE [" + HibernateDatabaseName + "]; DBCC SHRINKFILE (N'" + LogFile + "', 40); ";
             return tx;

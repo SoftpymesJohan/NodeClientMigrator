@@ -12,3 +12,4 @@ D:\lic\NodeClientMigrator\NodeClientMigrator\obj\Debug\NodeClientMigrator.csproj
 D:\lic\NodeClientMigrator\NodeClientMigrator\bin\Debug\NodeClientMigrator.exe
 D:\lic\NodeClientMigrator\NodeClientMigrator\bin\Debug\NodeClientMigrator.pdb
 D:\lic\NodeClientMigrator\NodeClientMigrator\bin\Debug\DotNetZip.dll
+E:\Pymes Migrator\NodeClientMigrator\NodeClientMigrator\bin\Debug\DotNetZip.dll
