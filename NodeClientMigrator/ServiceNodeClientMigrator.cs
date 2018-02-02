@@ -98,7 +98,17 @@ namespace NodeClientMigrator
                 {
                     Decompress(d, backupbk);
                     File.Delete(d);
-                    //RestoreDatabase(d,pathDataBases)
+                    //RestoreDatabase(d, pathDataBases);
+                }
+                DirectoryInfo di = new DirectoryInfo(backupbk+"\\");
+                foreach (var fi in Directory.GetDirectories(backupbk))
+                {
+                    var bak = Directory.GetFiles(fi, "*.bak").FirstOrDefault();
+                    if (!String.IsNullOrEmpty(bak))
+                    {
+                        RestoreDatabase(bak,pathDataBases);
+                    }
+                    Directory.Delete(fi, true);
                 }
             }
             catch (Exception)
@@ -173,7 +183,7 @@ namespace NodeClientMigrator
                 try
                 {
 
-                    var v = "Data Source=TECNICO3\\PYMESSQL2012;Initial Catalog=master;User ID=sa;Password=PymesDBPSW1; Connect Timeout=120;";
+                    var v = "Data Source=TECNICO3\\PYMESSQL2014;Initial Catalog=master;User ID=sa;Password=PymesDBPSW1; Connect Timeout=120;";
 
                     string DataFile = "";
                     string LogFile = "";
@@ -182,7 +192,7 @@ namespace NodeClientMigrator
                     string tx = "";
                     string HibernateInstance = GetConnectionValue(v, "Data Source");
                     string HibernateDatabaseName = GetConnectionValue(v, "Initial Catalog");
-                    install = path + "/" + HibernateInstance.Split('\\')[1];
+                    install = path + "\\" + HibernateInstance.Split('\\')[1];
                     if (!Directory.Exists(install))
                     {
                         CreateDir(install);
@@ -214,28 +224,63 @@ namespace NodeClientMigrator
                     cm.Connection.Close();
                     Log("Base de datos " + DataFile + " Y Log " + LogFile);
 
-                    string InstallPathDatabase = install + FileName /*+ instanceSelection.Split('\\')[1] + "\\"*/;
+                    string InstallPathDatabase = install + "\\" + FileName /*+ instanceSelection.Split('\\')[1] + "\\"*/;
 
                     if (!Directory.Exists(InstallPathDatabase))
                         Directory.CreateDirectory(InstallPathDatabase);
                     //filename.Replace(".zip", ".bak") 
+                    tx = " DATABASE [" + HibernateDatabaseName + "] CONTAINMENT = NONE ON PRIMARY (NAME = N'" + DataFile + "', FILENAME = N'" + InstallPathDatabase + "\\" + HibernateDatabaseName + ".mdf', SIZE = 5120KB, FILEGROWTH = 1024KB ) LOG ON (NAME = N'" + LogFile + "', FILENAME = N'" + InstallPathDatabase + "\\" + HibernateDatabaseName + "_Log.ldf', SIZE = 1024KB, FILEGROWTH = 10 %); ";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET COMPATIBILITY_LEVEL = 110;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET ANSI_NULL_DEFAULT OFF;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET ANSI_NULLS OFF;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET ANSI_PADDING OFF;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET ANSI_WARNINGS OFF;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET ARITHABORT OFF;"; 
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET AUTO_CLOSE OFF;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET AUTO_CREATE_STATISTICS ON;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET AUTO_SHRINK OFF; ";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET AUTO_UPDATE_STATISTICS ON;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET CURSOR_CLOSE_ON_COMMIT OFF;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET CURSOR_DEFAULT  GLOBAL;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET CONCAT_NULL_YIELDS_NULL OFF;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET NUMERIC_ROUNDABORT OFF;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET QUOTED_IDENTIFIER OFF;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET RECURSIVE_TRIGGERS OFF;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET DISABLE_BROKER;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET AUTO_UPDATE_STATISTICS_ASYNC OFF;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET DATE_CORRELATION_OPTIMIZATION OFF;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET PARAMETERIZATION SIMPLE;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET READ_COMMITTED_SNAPSHOT OFF;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET READ_WRITE;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET RECOVERY SIMPLE;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET MULTI_USER;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET PAGE_VERIFY CHECKSUM;";
+                    tx += "ALTER DATABASE[" + HibernateDatabaseName + "] SET TARGET_RECOVERY_TIME = 0 SECONDS;";
+                    tx += "USE[" + HibernateDatabaseName + "];";
+                    tx += "IF NOT EXISTS(SELECT name FROM sys.filegroups WHERE is_default = 1 AND name = N'PRIMARY') ALTER DATABASE[" + HibernateDatabaseName + "] MODIFY FILEGROUP[PRIMARY] DEFAULT;";
+                    cm.CommandText = tx;
+                    cm.Connection.Open();
+                    cm.ExecuteNonQuery();
+                    cm.Connection.Close();
 
-                    //cm.CommandText = "ALTER DATABASE [" + HibernateDatabaseName + "] SET SINGLE_USER WITH ROLLBACK IMMEDIATE";
-                    //cm.Connection.Open();
-                    //cm.ExecuteNonQuery();
-                    //cm.Connection.Close();
+                    cm.CommandText = "ALTER DATABASE [" + HibernateDatabaseName + "] SET SINGLE_USER WITH ROLLBACK IMMEDIATE";
+                    cm.Connection.Open();
+                    cm.ExecuteNonQuery();
+                    cm.Connection.Close();
 
+                    HibernateDatabaseName = FileName;
                     //Se utiliza el Alter para modificar la base para SINGLE_USER controlando que no se use por otros procesos
                     tx = "ALTER DATABASE [" + HibernateDatabaseName + "] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; ";
                     //if (DataFile.Equals("SiesaPYMES"))
                     // {
-                    tx += DeleteDataBase(HibernateDatabaseName);
+                    //tx += DeleteDataBase(HibernateDatabaseName);
                     //}
                     //Se restaura la Base de datos en modo SINGLE_USER
+                    //tx += "RESTORE DATABASE [" + HibernateDatabaseName + "] FROM DISK = '" + filename.Replace(".zip", ".bak") + "' WITH FILE = 1, ";
                     tx += "RESTORE DATABASE [" + HibernateDatabaseName + "] FROM DISK = '" + filename.Replace(".zip", ".bak") + "' WITH FILE = 1, ";
-                    tx += "MOVE N'" + DataFile + "' TO N'" + InstallPathDatabase + HibernateDatabaseName + ".mdf',";
-                    tx += " MOVE N'" + LogFile + "' TO N'" + InstallPathDatabase + HibernateDatabaseName + "_Log.ldf', NOUNLOAD, REPLACE, STATS = 10; ";
-                    tx += SizeDataBase(HibernateDatabaseName, LogFile);
+                    tx += "MOVE N'" + DataFile + "' TO N'" + InstallPathDatabase + "\\" + HibernateDatabaseName + ".mdf',";
+                    tx += " MOVE N'" + LogFile + "' TO N'" + InstallPathDatabase + "\\" + HibernateDatabaseName + "_Log.ldf', NOUNLOAD, REPLACE, STATS = 10; ";
+                    //tx += SizeDataBase(HibernateDatabaseName, LogFile);
                     Log(tx);
                     cm.CommandText = tx;
                     cm.Connection.Open();
