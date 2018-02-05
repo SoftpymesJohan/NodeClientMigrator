@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="MigrationsDBModelStoreContainer" CdmEntityContainer="MigrationsDBEntities">
+    <EntitySetMapping Name="Companies">
+      <EntityTypeMapping TypeName="MigrationsDBModel.Companies">
+        <MappingFragment StoreEntitySet="Companies">
+          <ScalarProperty Name="LogId" ColumnName="LogId" />
+          <ScalarProperty Name="CompanyDbId" ColumnName="CompanyDbId" />
+          <ScalarProperty Name="IdentificationNumber" ColumnName="IdentificationNumber" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LogDB">
+      <EntityTypeMapping TypeName="MigrationsDBModel.LogDB">
+        <MappingFragment StoreEntitySet="LogDB">
+          <ScalarProperty Name="Finish" ColumnName="Finish" />
+          <ScalarProperty Name="Processing" ColumnName="Processing" />
+          <ScalarProperty Name="InitialProcess" ColumnName="InitialProcess" />
+          <ScalarProperty Name="DataBases" ColumnName="DataBases" />
+          <ScalarProperty Name="LogId" ColumnName="LogId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Details">
+      <EntityTypeMapping TypeName="MigrationsDBModel.Details">
+        <MappingFragment StoreEntitySet="Details">
+          <ScalarProperty Name="LogId" ColumnName="LogId" />
+          <ScalarProperty Name="QuatityCompanies" ColumnName="QuatityCompanies" />
+          <ScalarProperty Name="Size" ColumnName="Size" />
+          <ScalarProperty Name="DetailId" ColumnName="DetailId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

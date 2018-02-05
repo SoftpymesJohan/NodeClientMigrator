@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MigrationsDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="MigrationsDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Companies" EntityType="MigrationsDBModel.Companies" />
+    <EntitySet Name="LogDB" EntityType="MigrationsDBModel.LogDB" />
+    <AssociationSet Name="FK_LogId" Association="MigrationsDBModel.FK_LogId">
+      <End Role="LogDB" EntitySet="LogDB" />
+      <End Role="Companies" EntitySet="Companies" />
+    </AssociationSet>
+    <EntitySet Name="Details" EntityType="MigrationsDBModel.Details" />
+    <AssociationSet Name="FK_Details_LogId" Association="MigrationsDBModel.FK_Details_LogId">
+      <End Role="LogDB" EntitySet="LogDB" />
+      <End Role="Details" EntitySet="Details" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Companies">
+    <Key>
+      <PropertyRef Name="CompanyId" />
+    </Key>
+    <Property Name="CompanyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IdentificationNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CompanyDbId" Type="Int32" />
+    <Property Name="LogId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="LogDB" Relationship="MigrationsDBModel.FK_LogId" FromRole="Companies" ToRole="LogDB" />
+  </EntityType>
+  <EntityType Name="LogDB">
+    <Key>
+      <PropertyRef Name="LogId" />
+    </Key>
+    <Property Name="LogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DataBases" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="InitialProcess" Nullable="false" Type="Boolean" />
+    <Property Name="Processing" Type="Boolean" Nullable="false" />
+    <Property Name="Finish" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Companies" Relationship="MigrationsDBModel.FK_LogId" FromRole="LogDB" ToRole="Companies" />
+    <NavigationProperty Name="Details" Relationship="MigrationsDBModel.FK_Details_LogId" FromRole="LogDB" ToRole="Details" />
+  </EntityType>
+  <Association Name="FK_LogId">
+    <End Type="MigrationsDBModel.LogDB" Role="LogDB" Multiplicity="1" />
+    <End Type="MigrationsDBModel.Companies" Role="Companies" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LogDB">
+        <PropertyRef Name="LogId" />
+      </Principal>
+      <Dependent Role="Companies">
+        <PropertyRef Name="LogId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Details">
+    <Key>
+      <PropertyRef Name="DetailId" />
+    </Key>
+    <Property Name="DetailId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Size" Type="Decimal" Precision="18" Scale="5" />
+    <Property Name="QuatityCompanies" Type="Int32" Nullable="false" />
+    <Property Name="LogId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="LogDB" Relationship="MigrationsDBModel.FK_Details_LogId" FromRole="Details" ToRole="LogDB" />
+  </EntityType>
+  <Association Name="FK_Details_LogId">
+    <End Type="MigrationsDBModel.LogDB" Role="LogDB" Multiplicity="1" />
+    <End Type="MigrationsDBModel.Details" Role="Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LogDB">
+        <PropertyRef Name="LogId" />
+      </Principal>
+      <Dependent Role="Details">
+        <PropertyRef Name="LogId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

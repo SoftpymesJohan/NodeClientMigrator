@@ -13,3 +13,15 @@ D:\lic\NodeClientMigrator\NodeClientMigrator\bin\Debug\NodeClientMigrator.exe
 D:\lic\NodeClientMigrator\NodeClientMigrator\bin\Debug\NodeClientMigrator.pdb
 D:\lic\NodeClientMigrator\NodeClientMigrator\bin\Debug\DotNetZip.dll
 E:\Pymes Migrator\NodeClientMigrator\NodeClientMigrator\bin\Debug\DotNetZip.dll
+C:\Softpymes_Git\NodeClientMigrator\NodeClientMigrator\bin\Debug\NodeClientMigrator.exe.config
+C:\Softpymes_Git\NodeClientMigrator\NodeClientMigrator\bin\Debug\NodeClientMigrator.exe
+C:\Softpymes_Git\NodeClientMigrator\NodeClientMigrator\bin\Debug\NodeClientMigrator.pdb
+C:\Softpymes_Git\NodeClientMigrator\NodeClientMigrator\bin\Debug\DotNetZip.dll
+C:\Softpymes_Git\NodeClientMigrator\NodeClientMigrator\bin\Debug\EntityFramework.dll
+C:\Softpymes_Git\NodeClientMigrator\NodeClientMigrator\bin\Debug\EntityFramework.SqlServer.dll
+C:\Softpymes_Git\NodeClientMigrator\NodeClientMigrator\bin\Debug\EntityFramework.xml
+C:\Softpymes_Git\NodeClientMigrator\NodeClientMigrator\bin\Debug\EntityFramework.SqlServer.xml
+C:\Softpymes_Git\NodeClientMigrator\NodeClientMigrator\obj\Debug\NodeClientMigrator.csprojResolveAssemblyReference.cache
+C:\Softpymes_Git\NodeClientMigrator\NodeClientMigrator\obj\Debug\NodeClientMigrator.csproj.CoreCompileInputs.cache
+C:\Softpymes_Git\NodeClientMigrator\NodeClientMigrator\obj\Debug\NodeClientMigrator.exe
+C:\Softpymes_Git\NodeClientMigrator\NodeClientMigrator\obj\Debug\NodeClientMigrator.pdb
