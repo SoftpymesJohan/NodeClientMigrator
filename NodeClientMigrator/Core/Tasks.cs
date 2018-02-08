@@ -132,12 +132,29 @@ namespace NodeClientMigrator.Core
             {
                 string backupzip = (path + "\\" + dir.Split('~')[0]);
                 string backupbk = (path + "\\" + dir.Split('~')[1]);
-                foreach (var d in direc.GetFilesDir(backupzip, "*.zip"))
+
+                /*foreach (var d in direc.GetFilesDir(backupzip, "*.zip"))
                 {
                     AddThread3(d,backupbk, pathDataBases);
                     Thread.Sleep(3000);
+                }*/
+                var d = direc.GetFilesDir(backupzip, "*.zip").FirstOrDefault();
+                if(d != null)
+                {
+                    string name = direc.FileName(d, ".zip", "");
+                    string url = "";
+                    bool isdb = db.IsDB(name) == null ? false : true;
+                    if (!isdb)
+                    {
+                        db.AddLogDB(name, true);
+                        url = direc.Decompress(d, backupbk);
+                        direc.DeleteArchive(d);
+                    }
+                    if (!string.IsNullOrEmpty(url))
+                    {
+                        ProcessRestaurate(url, pathDataBases);
+                    }
                 }
-
                 //AddThread2(backupbk, backupzip);
                 //AddThread(backupbk, pathDataBases);
                 //RestauringDB(backupbk);

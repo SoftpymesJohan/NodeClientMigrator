@@ -204,31 +204,43 @@ namespace NodeClientMigrator.Core
             return mdb.LogDB.Where(ldb => ldb.DataBases == name).FirstOrDefault();
         }
 
+        public Process IsDBProcess(int logId)
+        {
+            return mdb.Process.Where(ldb => ldb.LogId == logId).FirstOrDefault();
+        }
+
         public bool IsDBProcess(string name,bool InitialProcess, bool Processing, bool Finish)
         {
             //return IsDB(name) == null ? false : (IsDB(name).InitialProcess == InitialProcess && IsDB(name).Processing == Processing && IsDB(name).Finish == Finish) ? false : true;
             var i = IsDB(name);
-            return (i != null && (i.InitialProcess == InitialProcess && i.Processing == Processing && i.Finish == Finish));
+            var p = IsDBProcess(i.LogId);
+            return (i != null && p != null && (p.InitialProcess == InitialProcess && p.Processing == Processing && p.Finish == Finish));
         }
 
         public void AddLogDB(string name, bool InitialProcess)
         {
-            mdb.LogDB.Add(new LogDB { DataBases = name, InitialProcess = InitialProcess });
+            LogDB log = new LogDB { DataBases = name };
+            mdb.LogDB.Add(log);
+            Process pro = new Process { LogId = IsDB(name).LogId, InitialProcess = InitialProcess };
+            mdb.Process.Add(pro);
             int changes = mdb.SaveChanges();
         }
 
         public void UpdateLogDB(string name, bool InitialProcess, bool Processing, bool Finish)
         {
             var d = IsDB(name);//mdb.LogDB.Where(ldb => ldb.DataBases == name && ldb.InitialProcess).FirstOrDefault();
-            if(d.InitialProcess == InitialProcess && d.InitialProcess)
+            var p = IsDBProcess(d.LogId);
+            if (p.InitialProcess == InitialProcess && p.InitialProcess)
             {
-                d.InitialProcess = !InitialProcess;
-                d.Processing = true;
+                p.InitialProcess = !InitialProcess;
+                p.Processing = true;
+                p.DateProcessing = DateTime.Now;
             }
-            else if(d.Processing == Processing && d.Processing)
+            else if(p.Processing == Processing && p.Processing)
             {
-                d.Processing = !Processing;
-                d.Finish = true;
+                p.Processing = !Processing;
+                p.Finish = true;
+                p.DateFinish = DateTime.Now;
             }
             int changes = mdb.SaveChanges();
         }

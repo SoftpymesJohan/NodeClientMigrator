@@ -2,6 +2,7 @@
 using System.ServiceProcess;
 using System.IO;
 using NodeClientMigrator.Core;
+using System.Timers;
 
 namespace NodeClientMigrator
 {
@@ -22,7 +23,7 @@ namespace NodeClientMigrator
 
         protected override void OnStart(string[] args)
         {
-            this.timer = new System.Timers.Timer(10000D);//1000 MILISEGUNDOS O 1 MINUTO
+            this.timer = new Timer(4000D);//1000 MILISEGUNDOS O 1 MINUTO
             this.timer.AutoReset = true;
             dir = "Restore~Restoring~Restored";
             tasks = new Tasks();

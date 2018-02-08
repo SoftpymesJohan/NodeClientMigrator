@@ -45,7 +45,8 @@ namespace NodeClientMigrator.Core
             if (!ExistDirectory(pathdb))
             {
                 CreateDir(pathdb);
-                using (ZipFile file = new ZipFile(filename))
+                File.Move(filename, pathdb +"\\"+ dire + ".zip");
+                using (ZipFile file = new ZipFile(pathdb + "\\" + dire + ".zip"))
                 {
                     //Se extrae los archivos del .zip
                     file.ExtractAll(pathdb);

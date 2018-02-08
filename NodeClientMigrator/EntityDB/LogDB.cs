@@ -10,8 +10,5 @@ namespace NodeClientMigrator.EntityDB
     {
         public virtual int LogId { get; set; }
         public virtual string DataBases { get; set; }
-        public virtual bool InitialProcess { get; set; }
-        public virtual bool Processing { get; set; }
-        public virtual bool Finish { get; set; }
     }
 }
